@@ -42,7 +42,11 @@ export function Login() {
           // Temporarily disabled for testing
           navigate('/change-password');
         } else {
-          navigate('/dashboard');
+          if (data.user.role === 'admin') {
+            navigate('/admin/dashboard');
+          } else {
+            navigate('/dm/dashboard');
+          }
         }
       }
     } catch (err: any) {

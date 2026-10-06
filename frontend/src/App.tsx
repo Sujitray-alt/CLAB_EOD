@@ -15,7 +15,9 @@ import { DashboardLayout } from './components/DashboardLayout';
 
 function RootRedirect() {
   const token = useAuthStore((s) => s.token);
-  return token ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />;
+  const user = useAuthStore((s) => s.user);
+  if (!token || !user) return <Navigate to="/login" replace />;
+  return user.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dm/dashboard" replace />;
 }
 
 import { AnomaliesCenter } from './pages/AnomaliesCenter';
@@ -54,9 +56,23 @@ export function App() {
           }
         />
 
-        {/* Dashboard Shell with Layout */}
+        {/* Admin Dashboard */}
         <Route
-          path="/dashboard"
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute requireAdmin>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Overview />} />
+          <Route path="dms" element={<DistrictManagers />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+
+        {/* DM Dashboard */}
+        <Route
+          path="/dm/dashboard"
           element={
             <ProtectedRoute>
               <DashboardLayout />
@@ -64,14 +80,6 @@ export function App() {
           }
         >
           <Route index element={<Overview />} />
-          <Route
-            path="dms"
-            element={
-              <ProtectedRoute requireAdmin>
-                <DistrictManagers />
-              </ProtectedRoute>
-            }
-          />
           <Route path="monthly" element={<MonthlyAnalysis />} />
           <Route path="daily" element={<DailyAnalysis />} />
           <Route path="anomalies" element={<AnomaliesCenter />} />

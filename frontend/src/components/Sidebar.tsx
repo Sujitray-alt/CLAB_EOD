@@ -18,51 +18,53 @@ export function Sidebar() {
   const user = useAuthStore((s) => s.user);
   const [isOpen, setIsOpen] = useState(true);
 
+  const basePath = user?.role === 'admin' ? '/admin/dashboard' : '/dm/dashboard';
+
   const navItems = [
     {
-      to: '/dashboard',
+      to: basePath,
       label: 'Executive Overview',
       icon: BarChart3,
       adminOnly: false,
       end: true,
     },
     {
-      to: '/dashboard/dms',
+      to: `${basePath}/dms`,
       label: 'District Managers',
       icon: Users,
       adminOnly: true,
       end: false,
     },
     {
-      to: '/dashboard/monthly',
+      to: `${basePath}/monthly`,
       label: 'Monthly Summaries',
       icon: Calendar,
       adminOnly: false,
       end: false,
     },
     {
-      to: '/dashboard/daily',
+      to: `${basePath}/daily`,
       label: 'Daily Operational Logs',
       icon: Activity,
       adminOnly: false,
       end: false,
     },
     {
-      to: '/dashboard/anomalies',
+      to: `${basePath}/anomalies`,
       label: 'Anomaly Warning Center',
       icon: AlertTriangle,
       adminOnly: false,
       end: false,
     },
     {
-      to: '/dashboard/reports',
+      to: `${basePath}/reports`,
       label: 'Reports & Exports',
       icon: Download,
       adminOnly: false,
       end: false,
     },
     {
-      to: '/dashboard/settings',
+      to: `${basePath}/settings`,
       label: 'Settings & Security',
       icon: Settings,
       adminOnly: false,
