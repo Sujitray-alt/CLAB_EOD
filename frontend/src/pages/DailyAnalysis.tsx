@@ -55,6 +55,7 @@ interface DailyBreakdownData {
 }
 
 export function DailyAnalysis() {
+  const currentUser = useAuthStore((s) => s.user);
   const globalFilters = useFilterStore();
 
   const [records, setRecords] = useState<DailyRow[]>([]);
@@ -95,7 +96,8 @@ export function DailyAnalysis() {
       if (stationSearch.trim()) params.station_id = stationSearch.trim();
       if (operatorSearch.trim()) params.operator_code = operatorSearch.trim();
 
-      const res = await api.get('/api/daily/', { params });
+      const endpoint = currentUser?.role === 'admin' ? '/api/daily/' : '/api/dm/daily';
+      const res = await api.get(endpoint, { params });
       setRecords(res.data.items || []);
       setTotal(res.data.total || 0);
     } catch (err: any) {
@@ -128,7 +130,8 @@ export function DailyAnalysis() {
     try {
       // derive YYYYMM from row enroll_date e.g. 2026-01-15 -> 202601
       const enrollMonth = parseInt(row.enroll_date.replace(/-/g, '').substring(0, 6), 10);
-      const res = await api.get('/api/daily/breakdown', {
+      const endpoint = currentUser?.role === 'admin' ? '/api/daily/breakdown' : '/api/dm/daily/breakdown';
+      const res = await api.get(endpoint, {
         params: {
           month: enrollMonth,
           station_id: row.station_id,
