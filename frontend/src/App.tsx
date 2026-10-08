@@ -6,7 +6,6 @@ import { Verify2FA } from './pages/Verify2FA';
 import { UpdateCredentials } from './pages/UpdateCredentials';
 import { SetupSupabaseMFA } from './pages/SetupSupabaseMFA';
 import { ChangePassword } from './pages/ChangePassword';
-import { Overview } from './pages/Overview';
 import { DistrictManagers } from './pages/DistrictManagers';
 import { MonthlyAnalysis } from './pages/MonthlyAnalysis';
 import { DailyAnalysis } from './pages/DailyAnalysis';
@@ -20,7 +19,8 @@ function RootRedirect() {
   return user.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dm/dashboard" replace />;
 }
 
-import { AnomaliesCenter } from './pages/AnomaliesCenter';
+import { AdminOverview } from './pages/AdminOverview';
+import { DMOverview } from './pages/DMOverview';
 import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
 
@@ -65,7 +65,7 @@ export function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Overview />} />
+          <Route index element={<AdminOverview />} />
           <Route path="dms" element={<DistrictManagers />} />
           <Route path="settings" element={<Settings />} />
         </Route>
@@ -79,10 +79,9 @@ export function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Overview />} />
+          <Route index element={<DMOverview />} />
           <Route path="monthly" element={<MonthlyAnalysis />} />
           <Route path="daily" element={<DailyAnalysis />} />
-          <Route path="anomalies" element={<AnomaliesCenter />} />
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
         </Route>

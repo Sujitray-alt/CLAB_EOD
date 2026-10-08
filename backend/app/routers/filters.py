@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies.db import get_db
-from app.dependencies.auth import require_mfa
+from app.dependencies.auth import get_current_user
 from app.models import AdminUser
 from app.schemas.filters import FilterOptionsResponse
 from app.services.analytics_service import AnalyticsService
@@ -17,7 +17,7 @@ async def get_filter_options(
     district_id: Optional[int] = Query(None, description="Selected District ID"),
     dm_id: Optional[str] = Query(None, description="Selected DM User UUID or DMID string"),
     db: AsyncSession = Depends(get_db),
-    _: AdminUser = Depends(require_mfa)
+    _: AdminUser = Depends(get_current_user)
 ):
     """
     Fetch period-aware cascading filter choices:

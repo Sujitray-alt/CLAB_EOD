@@ -5,7 +5,7 @@ import {
   Users,
   Calendar,
   Activity,
-  AlertTriangle,
+  
   Download,
   Settings,
   Shield,
@@ -46,13 +46,6 @@ export function Sidebar() {
       to: `${basePath}/daily`,
       label: 'Daily Operational Logs',
       icon: Activity,
-      adminOnly: false,
-      end: false,
-    },
-    {
-      to: `${basePath}/anomalies`,
-      label: 'Anomaly Warning Center',
-      icon: AlertTriangle,
       adminOnly: false,
       end: false,
     },

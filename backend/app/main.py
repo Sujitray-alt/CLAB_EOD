@@ -7,9 +7,9 @@ from app.routers import (
     monthly,
     daily,
     filters,
-    anomalies,
     exports,
     audit_log,
+    dm,
 )
 
 app = FastAPI(
@@ -44,9 +44,9 @@ app.include_router(district_managers.router, prefix="/api/district-managers", ta
 app.include_router(monthly.router, prefix="/api/monthly", tags=["Monthly Analytics"])
 app.include_router(daily.router, prefix="/api/daily", tags=["Daily Analytics"])
 app.include_router(filters.router, prefix="/api/filters", tags=["Filter Options"])
-app.include_router(anomalies.router, prefix="/api/anomalies", tags=["Anomaly Detection"])
 app.include_router(exports.router, prefix="/api/exports", tags=["Data Exports"])
 app.include_router(audit_log.router, prefix="/api/audit-log", tags=["Audit Log"])
+app.include_router(dm.router, prefix="/api/dm", tags=["District Manager Dashboard"])
 
 @app.api_route("/api/health", methods=["GET", "HEAD"], tags=["Health"])
 async def health_check():

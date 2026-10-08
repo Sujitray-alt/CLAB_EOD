@@ -522,11 +522,11 @@ class AnalyticsService:
             )
 
         # 1. Total KPI totals & active days
-        kpi_stmt = select(
+        kpi_stmt = base_stmt.with_only_columns(
             func.coalesce(func.sum(DailyRecord.total_enrollment), 0),
             func.coalesce(func.sum(DailyRecord.total_amount), 0),
             func.count(distinct(DailyRecord.enroll_date))
-        ).select_from(base_stmt.subquery())
+        )
         
         kpi_res = (await db.execute(kpi_stmt)).first()
         tot_enroll = kpi_res[0] if kpi_res else 0
@@ -535,12 +535,11 @@ class AnalyticsService:
 
         # 2. Daily Trend
         trend_stmt = (
-            select(
+            base_stmt.with_only_columns(
                 DailyRecord.enroll_date,
                 func.coalesce(func.sum(DailyRecord.total_enrollment), 0).label("enrolls"),
                 func.coalesce(func.sum(DailyRecord.total_amount), 0).label("rev")
             )
-            .select_from(base_stmt.subquery())
             .group_by(DailyRecord.enroll_date)
             .order_by(asc(DailyRecord.enroll_date))
         )
@@ -606,7 +605,7 @@ class AnalyticsService:
         ]
 
         # 4. Category Mix
-        mix_stmt = select(
+        mix_stmt = base_stmt.with_only_columns(
             func.coalesce(
                 func.sum(DailyRecord.bmu_100 + DailyRecord.bmu_125), 0
             ),
@@ -623,7 +622,7 @@ class AnalyticsService:
             func.coalesce(
                 func.sum(DailyRecord.new_0), 0
             )
-        ).select_from(base_stmt.subquery())
+        )
 
         mix_res = (await db.execute(mix_stmt)).first()
 
