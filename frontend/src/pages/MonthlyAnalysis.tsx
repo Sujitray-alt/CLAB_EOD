@@ -73,7 +73,8 @@ export function MonthlyAnalysis() {
       if (globalFilters.dmId) params.dm_id = globalFilters.dmId;
       if (stationSearch.trim()) params.station_id = stationSearch.trim();
 
-      const res = await api.get('/api/monthly/', { params });
+      const endpoint = currentUser?.role === 'admin' ? '/api/monthly/' : '/api/dm/monthly';
+      const res = await api.get(endpoint, { params });
       setRecords(res.data.items || []);
       setTotal(res.data.total || 0);
     } catch (err: any) {
@@ -113,90 +114,61 @@ export function MonthlyAnalysis() {
   const pageAmount = records.reduce((sum, r) => sum + Number(r.total_amount || 0), 0);
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 pb-12 font-sans">
       
       {/* Page Header */}
-      <div className="border-b border-slate-200 pb-5">
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center space-x-3">
-          <Calendar className="w-7 h-7 text-blue-900" />
-          <span>Monthly Station Summaries</span>
+      <div className="border-b border-[#E2E8F0] pb-4">
+        <h1 className="text-[22px] font-bold text-[#0F1729]">
+          Monthly Station Summaries
         </h1>
-        <p className="text-sm text-slate-600 mt-1">
-          Detailed monthly production records, fee category breakdowns, and revenue statistics across all active stations.
+        <p className="text-[13px] text-[#4B5563] mt-1">
+          Detailed monthly production records, fee category breakdowns, and revenue statistics.
         </p>
-      </div>
-
-      {/* Non-Tech Help & Guidance Banner */}
-      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-start space-x-4">
-        <div className="p-2.5 rounded-xl bg-blue-900 text-white flex-shrink-0 mt-0.5">
-          <Info className="w-6 h-6" />
-        </div>
-        <div className="space-y-1">
-          <h2 className="text-base font-bold text-blue-950">Station Production Inspection</h2>
-          <p className="text-sm text-slate-700 leading-relaxed">
-            Each row represents a station's consolidated monthly output. Use the top <strong>Filter bar</strong> to target specific months or districts, or search below by <strong>Station ID / Name</strong>.
-          </p>
-        </div>
       </div>
 
       {/* Summary KPI Strip for Current View */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase text-slate-500">Total Monthly Records</span>
-            <div className="p-2 bg-blue-50 text-blue-900 rounded-xl">
-              <Building2 className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-2xl font-extrabold text-slate-900">
-            {total.toLocaleString()} <span className="text-xs text-slate-500 font-normal">station records</span>
+        <div className="bg-white p-5 rounded-[8px] border border-[#E2E8F0] flex flex-col justify-between relative">
+          <Building2 className="w-4 h-4 text-[#9CA3AF] absolute top-5 right-5" />
+          <span className="text-[#9CA3AF] text-[11px] font-semibold uppercase tracking-wide">Total Monthly Records</span>
+          <div className="mt-3 text-[28px] font-extrabold text-[#0F1729]">
+            {total.toLocaleString()} <span className="text-[14px] font-medium text-[#4B5563]">records</span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase text-slate-500">Page Volume</span>
-            <div className="p-2 bg-slate-100 text-slate-800 rounded-xl">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-2xl font-extrabold text-blue-900">
-            {pageEnrollments.toLocaleString()} <span className="text-xs text-slate-500 font-normal">enrollments on page</span>
+        <div className="bg-white p-5 rounded-[8px] border border-[#E2E8F0] flex flex-col justify-between relative">
+          <TrendingUp className="w-4 h-4 text-[#9CA3AF] absolute top-5 right-5" />
+          <span className="text-[#9CA3AF] text-[11px] font-semibold uppercase tracking-wide">Page Volume</span>
+          <div className="mt-3 text-[28px] font-extrabold text-[#0F1729]">
+            {pageEnrollments.toLocaleString()} <span className="text-[14px] font-medium text-[#4B5563]">enrollments</span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase text-slate-500">Page Revenue Output</span>
-            <div className="p-2 bg-emerald-50 text-emerald-800 rounded-xl">
-              <DollarSign className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="text-2xl font-extrabold text-slate-900 font-mono">
+        <div className="bg-white p-5 rounded-[8px] border border-[#E2E8F0] flex flex-col justify-between relative">
+          <DollarSign className="w-4 h-4 text-[#9CA3AF] absolute top-5 right-5" />
+          <span className="text-[#9CA3AF] text-[11px] font-semibold uppercase tracking-wide">Page Revenue Output</span>
+          <div className="mt-3 text-[28px] font-extrabold text-[#0F1729] font-mono">
             ₹{pageAmount.toLocaleString()}
           </div>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="bg-white p-5 rounded-[8px] border border-[#E2E8F0]">
         <form onSubmit={handleSearchSubmit} className="flex flex-wrap items-center gap-4">
           <div className="relative flex-1 min-w-[280px]">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <Search className="w-4 h-4" />
-            </div>
             <input
               type="text"
-              placeholder="Search by Station ID (e.g. STN001 or 1001)..."
+              placeholder="Search by Station ID (e.g. STN001)..."
               value={stationSearch}
               onChange={(e) => setStationSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3.5 py-2 h-9 bg-white border border-[#CBD5E1] rounded-[8px] text-[13px] text-[#0F1729] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#2952C4]"
             />
           </div>
 
           <button
             type="submit"
-            className="px-5 py-2.5 bg-slate-900 text-white font-bold rounded-xl text-sm hover:bg-slate-800 transition cursor-pointer"
+            className="px-5 h-9 bg-[#1A3A8F] text-white font-semibold rounded-[8px] text-[13px] hover:bg-[#2952C4] transition"
           >
             Search Station
           </button>
@@ -205,10 +177,9 @@ export function MonthlyAnalysis() {
             <button
               type="button"
               onClick={handleResetSearch}
-              className="flex items-center space-x-1 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition border border-slate-200 cursor-pointer"
+              className="px-4 h-9 text-[#1A3A8F] hover:underline text-[13px] font-semibold transition"
             >
-              <RefreshCw className="w-4 h-4" />
-              <span>Reset Search</span>
+              Reset Search
             </button>
           )}
         </form>
@@ -216,115 +187,115 @@ export function MonthlyAnalysis() {
 
       {/* Error Callout */}
       {error && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-amber-900 flex items-center space-x-3">
-          <AlertCircle className="w-6 h-6 text-amber-700 flex-shrink-0" />
-          <div className="text-sm font-medium">{error}</div>
+        <div className="bg-red-50 border border-red-200 rounded-[8px] p-4 flex items-start space-x-3 text-red-800 text-[13px]">
+          <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="font-medium">{error}</div>
         </div>
       )}
 
       {/* Monthly Summary Data Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-[8px] border border-[#E2E8F0] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider">
-                <th className="py-3.5 px-4">Month</th>
-                <th className="py-3.5 px-4">Station ID & Name</th>
-                <th className="py-3.5 px-4">Operator Code</th>
-                <th className="py-3.5 px-4">District</th>
-                <th className="py-3.5 px-4">District Manager</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">BMU @ 100</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">BMU @ 125</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">DMU @ 50</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">DMU @ 75</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">MBU @ 0</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">MBU @ 100</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">MBU @ 125</th>
-                <th className="py-3.5 px-4 text-center whitespace-nowrap">NEW @ 0</th>
-                <th className="py-3.5 px-4 text-right">Total Enrollments</th>
-                <th className="py-3.5 px-4 text-right">Amount (₹)</th>
+              <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0] text-[11px] font-semibold uppercase tracking-[0.05em] text-[#4B5563]">
+                <th className="py-3 px-4">Month</th>
+                <th className="py-3 px-4">Station ID & Name</th>
+                <th className="py-3 px-4">Operator Code</th>
+                <th className="py-3 px-4">District</th>
+                <th className="py-3 px-4">District Manager</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">BMU @ 100</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">BMU @ 125</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">DMU @ 50</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">DMU @ 75</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">MBU @ 0</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">MBU @ 100</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">MBU @ 125</th>
+                <th className="py-3 px-4 text-center whitespace-nowrap">NEW @ 0</th>
+                <th className="py-3 px-4 text-right">Enrollments</th>
+                <th className="py-3 px-4 text-right">Amount (₹)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-sm">
+            <tbody className="divide-y divide-[#F1F5F9] text-[13px]">
               {loading ? (
                 <tr>
-                  <td colSpan={15} className="text-center py-12 text-slate-500">
-                    <div className="flex items-center justify-center space-x-2 text-sm font-semibold">
-                      <Loader2 className="w-5 h-5 animate-spin text-blue-900" />
+                  <td colSpan={15} className="text-center py-12 text-[#9CA3AF]">
+                    <div className="flex items-center justify-center space-x-2 font-medium">
+                      <Loader2 className="w-5 h-5 animate-spin text-[#1A3A8F]" />
                       <span>Loading Monthly Records...</span>
                     </div>
                   </td>
                 </tr>
               ) : records.length > 0 ? (
                 records.map((r) => (
-                  <tr key={r.summary_id} className="hover:bg-slate-50 transition">
+                  <tr key={r.summary_id} className="hover:bg-[#F8FAFC] transition h-[48px]">
                     
                     {/* Month */}
-                    <td className="py-4 px-4 font-bold text-slate-900">
+                    <td className="py-2 px-4 font-semibold text-[#0F1729]">
                       {formatMonthLabel(r.enroll_month)}
                     </td>
 
                     {/* Station */}
-                    <td className="py-4 px-4">
-                      <div className="font-bold text-slate-900">{r.station_name || `Station ${r.station_id}`}</div>
-                      <div className="text-xs text-slate-500 font-mono">{r.station_id}</div>
+                    <td className="py-2 px-4">
+                      <div className="font-semibold text-[#0F1729]">{r.station_name || `Station ${r.station_id}`}</div>
+                      <div className="text-[11px] text-[#9CA3AF] font-mono">{r.station_id}</div>
                     </td>
 
                     {/* Operator */}
-                    <td className="py-4 px-4 font-mono font-semibold text-slate-700">
+                    <td className="py-2 px-4 font-mono font-medium text-[#4B5563]">
                       {r.operator_code}
                     </td>
 
                     {/* District */}
-                    <td className="py-4 px-4 font-medium text-slate-700">
+                    <td className="py-2 px-4 text-[#4B5563]">
                       {r.district_name || 'Unassigned'}
                     </td>
 
                     {/* DM */}
-                    <td className="py-4 px-4">
+                    <td className="py-2 px-4">
                       {r.dm_name ? (
                         <>
-                          <div className="font-semibold text-slate-800">{r.dm_name}</div>
-                          <div className="text-[11px] font-mono text-slate-500">{r.dm_id}</div>
+                          <div className="font-medium text-[#0F1729]">{r.dm_name}</div>
+                          <div className="text-[11px] font-mono text-[#9CA3AF]">{r.dm_id}</div>
                         </>
                       ) : (
-                        <span className="text-xs text-slate-400 italic">Unassigned</span>
+                        <span className="text-[11px] text-[#9CA3AF] italic">Unassigned</span>
                       )}
                     </td>
 
                     {/* Fee Category Breakdowns */}
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.bmu_100 > 0 ? <span className="text-blue-900 font-bold">{r.bmu_100} (₹{(r.bmu_100 * 100).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.bmu_100 > 0 ? <span className="text-[#0F1729] font-medium">{r.bmu_100} <span className="text-[#9CA3AF]">(₹{(r.bmu_100 * 100).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.bmu_125 > 0 ? <span className="text-blue-900 font-bold">{r.bmu_125} (₹{(r.bmu_125 * 125).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.bmu_125 > 0 ? <span className="text-[#0F1729] font-medium">{r.bmu_125} <span className="text-[#9CA3AF]">(₹{(r.bmu_125 * 125).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.dmu_50 > 0 ? <span className="text-indigo-900 font-bold">{r.dmu_50} (₹{(r.dmu_50 * 50).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.dmu_50 > 0 ? <span className="text-[#0F1729] font-medium">{r.dmu_50} <span className="text-[#9CA3AF]">(₹{(r.dmu_50 * 50).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.dmu_75 > 0 ? <span className="text-indigo-900 font-bold">{r.dmu_75} (₹{(r.dmu_75 * 75).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.dmu_75 > 0 ? <span className="text-[#0F1729] font-medium">{r.dmu_75} <span className="text-[#9CA3AF]">(₹{(r.dmu_75 * 75).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.mbu_0 > 0 ? <span className="text-purple-900 font-bold">{r.mbu_0} (₹0)</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.mbu_0 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_0} <span className="text-[#9CA3AF]">(₹0)</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.mbu_100 > 0 ? <span className="text-purple-900 font-bold">{r.mbu_100} (₹{(r.mbu_100 * 100).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.mbu_100 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_100} <span className="text-[#9CA3AF]">(₹{(r.mbu_100 * 100).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.mbu_125 > 0 ? <span className="text-purple-900 font-bold">{r.mbu_125} (₹{(r.mbu_125 * 125).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.mbu_125 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_125} <span className="text-[#9CA3AF]">(₹{(r.mbu_125 * 125).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
-                    <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.new_0 > 0 ? <span className="text-emerald-900 font-bold">{r.new_0} (₹0)</span> : <span className="text-slate-400 font-bold">0</span>}
+                    <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
+                      {r.new_0 > 0 ? <span className="text-[#0F1729] font-medium">{r.new_0} <span className="text-[#9CA3AF]">(₹0)</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
 
                     {/* Total Enrollments */}
-                    <td className="py-4 px-4 text-right font-extrabold text-blue-900 text-base">
+                    <td className="py-2 px-4 text-right font-bold text-[#0F1729]">
                       {r.total_enrollment.toLocaleString()}
                     </td>
 
                     {/* Amount */}
-                    <td className="py-4 px-4 text-right font-mono font-bold text-slate-800">
+                    <td className="py-2 px-4 text-right font-mono font-medium text-[#4B5563]">
                       ₹{Number(r.total_amount || 0).toLocaleString()}
                     </td>
 
@@ -332,8 +303,8 @@ export function MonthlyAnalysis() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={15} className="text-center py-12 text-slate-400 text-sm">
-                    No monthly station records found for the selected filter parameters.
+                  <td colSpan={15} className="text-center py-12 text-[#9CA3AF] text-[13px] italic">
+                    No records found for the selected filters.
                   </td>
                 </tr>
               )}
@@ -342,13 +313,13 @@ export function MonthlyAnalysis() {
         </div>
 
         {/* Pagination Bar */}
-        <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 font-semibold">
+        <div className="bg-[#F8FAFC] border-t border-[#E2E8F0] px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-[12px] text-[#4B5563]">
           <div>
             Showing {total > 0 ? (page - 1) * pageSize + 1 : 0} to {Math.min(page * pageSize, total)} of {total.toLocaleString()} records
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1.5">
+            <div className="flex items-center space-x-2">
               <span>Rows per page:</span>
               <select
                 value={pageSize}
@@ -356,7 +327,7 @@ export function MonthlyAnalysis() {
                   setPageSize(parseInt(e.target.value, 10));
                   setPage(1);
                 }}
-                className="px-2 py-1 bg-white border border-slate-300 rounded-lg text-xs font-bold focus:outline-none"
+                className="px-2 py-1 bg-white border border-[#CBD5E1] rounded-[6px] text-[12px] focus:outline-none focus:ring-1 focus:ring-[#1A3A8F]"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -365,21 +336,21 @@ export function MonthlyAnalysis() {
               </select>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <button
                 type="button"
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="p-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+                className="p-1.5 bg-white border border-[#CBD5E1] rounded-[6px] hover:bg-[#F1F5F9] disabled:opacity-40 disabled:cursor-not-allowed transition"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span>Page {page} of {totalPages}</span>
+              <span className="px-2 font-medium">Page {page} of {totalPages}</span>
               <button
                 type="button"
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => p + 1)}
-                className="p-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+                className="p-1.5 bg-white border border-[#CBD5E1] rounded-[6px] hover:bg-[#F1F5F9] disabled:opacity-40 disabled:cursor-not-allowed transition"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

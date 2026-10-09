@@ -155,8 +155,8 @@ export function DailyAnalysis() {
       
       {/* Page Header */}
       <div className="border-b border-slate-200 pb-5">
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center space-x-3">
-          <Clock className="w-7 h-7 text-blue-900" />
+        <h1 className="text-2xl font-extrabold text-[#0F1729] flex items-center space-x-3">
+          <Clock className="w-7 h-7 text-[#0F1729]" />
           <span>Daily Operational Activity Logs</span>
         </h1>
         <p className="text-sm text-slate-600 mt-1">
@@ -165,13 +165,13 @@ export function DailyAnalysis() {
       </div>
 
       {/* Guidance Banner */}
-      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-start space-x-4">
-        <div className="p-2.5 rounded-xl bg-blue-900 text-white flex-shrink-0 mt-0.5">
+      <div className="border border-blue-200 rounded-lg p-5 flex items-start space-x-4">
+        <div className="p-2.5 rounded-lg bg-[#1A3A8F] text-white flex-shrink-0 mt-0.5">
           <Info className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h2 className="text-base font-bold text-blue-950">Daily Operational Supervision</h2>
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <h2 className="text-base font-bold text-[#0F1729]">Daily Operational Supervision</h2>
+          <p className="text-sm text-[#0F1729] leading-relaxed">
             Filter logs by <strong>Date Range</strong>, <strong>Station ID</strong>, or <strong>Operator Code</strong>. Click <strong>View Breakdown</strong> on any row to view full daily logs for that operator.
           </p>
         </div>
@@ -179,33 +179,33 @@ export function DailyAnalysis() {
 
       {/* KPI Tiles */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="bg-white p-5 rounded-lg border border-slate-200 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase text-slate-500">Total Matching Operational Days</span>
-            <div className="p-2 bg-blue-50 text-blue-900 rounded-xl">
+            <div className="p-2 text-[#9CA3AF] rounded-lg">
               <Calendar className="w-5 h-5" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-slate-900">
+          <div className="text-2xl font-extrabold text-[#0F1729]">
             {total.toLocaleString()} <span className="text-xs text-slate-500 font-normal">daily log entries</span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <div className="bg-white p-5 rounded-lg border border-slate-200 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase text-slate-500">Registrations on Page</span>
-            <div className="p-2 bg-slate-100 text-slate-800 rounded-xl">
+            <div className="p-2 text-[#9CA3AF] rounded-lg">
               <Building2 className="w-5 h-5" />
             </div>
           </div>
-          <div className="text-2xl font-extrabold text-blue-900">
+          <div className="text-2xl font-extrabold text-[#0F1729]">
             {pageEnrollments.toLocaleString()} <span className="text-xs text-slate-500 font-normal">registrations logged</span>
           </div>
         </div>
       </div>
 
       {/* Filter & Search Controls */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="bg-white p-5 rounded-lg border border-slate-200">
         <form onSubmit={handleSearchSubmit} className="flex flex-wrap items-center gap-4">
           
           {/* Start Date */}
@@ -215,7 +215,7 @@ export function DailyAnalysis() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
             />
           </div>
 
@@ -226,7 +226,7 @@ export function DailyAnalysis() {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
             />
           </div>
 
@@ -237,7 +237,7 @@ export function DailyAnalysis() {
               placeholder="Station ID..."
               value={stationSearch}
               onChange={(e) => setStationSearch(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
             />
           </div>
 
@@ -248,13 +248,13 @@ export function DailyAnalysis() {
               placeholder="Operator Code..."
               value={operatorSearch}
               onChange={(e) => setOperatorSearch(e.target.value)}
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
             />
           </div>
 
           <button
             type="submit"
-            className="px-5 py-2 bg-slate-900 text-white font-bold rounded-xl text-sm hover:bg-slate-800 transition cursor-pointer"
+            className="px-5 py-2 bg-slate-900 text-white font-bold rounded-lg text-sm hover:bg-slate-800 transition cursor-pointer"
           >
             Apply Filters
           </button>
@@ -263,7 +263,7 @@ export function DailyAnalysis() {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="flex items-center space-x-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition border border-slate-200 cursor-pointer"
+              className="flex items-center space-x-1 px-3 py-2 hover:bg-slate-200 text-[#0F1729] rounded-lg text-sm font-semibold transition border border-slate-200 cursor-pointer"
             >
               <RefreshCw className="w-4 h-4" />
               <span>Reset</span>
@@ -275,18 +275,18 @@ export function DailyAnalysis() {
 
       {/* Error Callout */}
       {error && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-amber-900 flex items-center space-x-3">
-          <AlertCircle className="w-6 h-6 text-amber-700 flex-shrink-0" />
+        <div className="border border-amber-200 rounded-lg p-5 text-[#0F1729] flex items-center space-x-3">
+          <AlertCircle className="w-6 h-6 text-[#0F1729] flex-shrink-0" />
           <div className="text-sm font-medium">{error}</div>
         </div>
       )}
 
       {/* Daily Records Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider">
+              <tr className="border-b border-slate-200 text-[#9CA3AF] text-xs font-bold uppercase tracking-wider">
                 <th className="py-3.5 px-4">Log Date</th>
                 <th className="py-3.5 px-4">Station ID & Name</th>
                 <th className="py-3.5 px-4">Operator Code</th>
@@ -310,33 +310,33 @@ export function DailyAnalysis() {
                 <tr>
                   <td colSpan={16} className="text-center py-12 text-slate-500">
                     <div className="flex items-center justify-center space-x-2 text-sm font-semibold">
-                      <Loader2 className="w-5 h-5 animate-spin text-blue-900" />
+                      <Loader2 className="w-5 h-5 animate-spin text-[#0F1729]" />
                       <span>Loading Daily Activity Logs...</span>
                     </div>
                   </td>
                 </tr>
               ) : records.length > 0 ? (
                 records.map((r) => (
-                  <tr key={r.record_id} className="hover:bg-slate-50 transition">
+                  <tr key={r.record_id} className="hover: transition">
                     
                     {/* Date */}
-                    <td className="py-4 px-4 font-bold text-slate-900">
+                    <td className="py-4 px-4 font-bold text-[#0F1729]">
                       {r.enroll_date}
                     </td>
 
                     {/* Station */}
                     <td className="py-4 px-4">
-                      <div className="font-bold text-slate-900">{r.station_name || `Station ${r.station_id}`}</div>
+                      <div className="font-bold text-[#0F1729]">{r.station_name || `Station ${r.station_id}`}</div>
                       <div className="text-xs text-slate-500 font-mono">{r.station_id}</div>
                     </td>
 
                     {/* Operator */}
-                    <td className="py-4 px-4 font-mono font-semibold text-slate-700">
+                    <td className="py-4 px-4 font-mono font-semibold text-[#0F1729]">
                       {r.operator_code}
                     </td>
 
                     {/* District */}
-                    <td className="py-4 px-4 font-medium text-slate-700">
+                    <td className="py-4 px-4 font-medium text-[#0F1729]">
                       {r.district_name || 'N/A'}
                     </td>
 
@@ -344,7 +344,7 @@ export function DailyAnalysis() {
                     <td className="py-4 px-4">
                       {r.dm_name ? (
                         <>
-                          <div className="font-semibold text-slate-800">{r.dm_name}</div>
+                          <div className="font-semibold text-[#0F1729]">{r.dm_name}</div>
                           <div className="text-[11px] font-mono text-slate-500">{r.dm_id}</div>
                         </>
                       ) : (
@@ -354,10 +354,10 @@ export function DailyAnalysis() {
 
                     {/* Fee Category Breakdowns */}
                     <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.bmu_100 > 0 ? <span className="text-blue-900 font-bold">{r.bmu_100} (₹{(r.bmu_100 * 100).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                      {r.bmu_100 > 0 ? <span className="text-[#0F1729] font-bold">{r.bmu_100} (₹{(r.bmu_100 * 100).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
                     </td>
                     <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.bmu_125 > 0 ? <span className="text-blue-900 font-bold">{r.bmu_125} (₹{(r.bmu_125 * 125).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
+                      {r.bmu_125 > 0 ? <span className="text-[#0F1729] font-bold">{r.bmu_125} (₹{(r.bmu_125 * 125).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
                     </td>
                     <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
                       {r.dmu_50 > 0 ? <span className="text-indigo-900 font-bold">{r.dmu_50} (₹{(r.dmu_50 * 50).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
@@ -375,16 +375,16 @@ export function DailyAnalysis() {
                       {r.mbu_125 > 0 ? <span className="text-purple-900 font-bold">{r.mbu_125} (₹{(r.mbu_125 * 125).toLocaleString()})</span> : <span className="text-slate-400 font-bold">0</span>}
                     </td>
                     <td className="py-4 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.new_0 > 0 ? <span className="text-emerald-900 font-bold">{r.new_0} (₹0)</span> : <span className="text-slate-400 font-bold">0</span>}
+                      {r.new_0 > 0 ? <span className="text-[#0F1729] font-bold">{r.new_0} (₹0)</span> : <span className="text-slate-400 font-bold">0</span>}
                     </td>
 
                     {/* Total Enrollments */}
-                    <td className="py-4 px-4 text-right font-extrabold text-blue-900 text-base">
+                    <td className="py-4 px-4 text-right font-extrabold text-[#0F1729] text-base">
                       {r.total_enrollment}
                     </td>
 
                     {/* Amount */}
-                    <td className="py-4 px-4 text-right font-mono font-bold text-slate-800">
+                    <td className="py-4 px-4 text-right font-mono font-bold text-[#0F1729]">
                       ₹{Number(r.total_amount || 0).toLocaleString()}
                     </td>
 
@@ -393,7 +393,7 @@ export function DailyAnalysis() {
                       <button
                         type="button"
                         onClick={() => openBreakdownDrawer(r)}
-                        className="inline-flex items-center space-x-1 px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-900 rounded-lg text-xs font-semibold border border-blue-200 transition cursor-pointer"
+                        className="inline-flex items-center space-x-1 px-2.5 py-1.5 hover:text-[#9CA3AF] rounded-lg text-xs font-semibold border border-blue-200 transition cursor-pointer"
                         title="View day-by-day logs for this operator"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -415,7 +415,7 @@ export function DailyAnalysis() {
         </div>
 
         {/* Pagination Bar */}
-        <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 font-semibold">
+        <div className="border-t border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 font-semibold">
           <div>
             Showing {total > 0 ? (page - 1) * pageSize + 1 : 0} to {Math.min(page * pageSize, total)} of {total.toLocaleString()} daily logs
           </div>
@@ -443,7 +443,7 @@ export function DailyAnalysis() {
                 type="button"
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="p-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+                className="p-2 bg-white border border-slate-300 rounded-lg hover: disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -452,7 +452,7 @@ export function DailyAnalysis() {
                 type="button"
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => p + 1)}
-                className="p-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+                className="p-2 bg-white border border-slate-300 rounded-lg hover: disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -465,17 +465,17 @@ export function DailyAnalysis() {
       {/* Operator Daily Breakdown Drawer */}
       {isDrawerOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs">
-          <div className="bg-white w-full max-w-2xl h-full shadow-2xl overflow-y-auto p-6 space-y-6 flex flex-col justify-between">
+          <div className="bg-white w-full max-w-2xl h-full overflow-y-auto p-6 space-y-6 flex flex-col justify-between">
             
             <div className="space-y-6">
               {/* Drawer Header */}
               <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2.5 bg-blue-50 text-blue-900 rounded-xl">
+                  <div className="p-2.5 text-[#9CA3AF] rounded-lg">
                     <Users className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">
+                    <h3 className="text-lg font-bold text-[#0F1729]">
                       Operator Daily Breakdown
                     </h3>
                     <p className="text-xs text-slate-500 font-mono">
@@ -487,7 +487,7 @@ export function DailyAnalysis() {
                 <button
                   type="button"
                   onClick={() => setIsDrawerOpen(false)}
-                  className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer"
+                  className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover: cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -495,7 +495,7 @@ export function DailyAnalysis() {
 
               {drawerLoading ? (
                 <div className="flex items-center justify-center py-20 text-slate-500 text-sm font-semibold">
-                  <Loader2 className="w-6 h-6 animate-spin text-blue-900 mr-2" />
+                  <Loader2 className="w-6 h-6 animate-spin text-[#0F1729] mr-2" />
                   <span>Loading operator daily breakdown...</span>
                 </div>
               ) : breakdownData ? (
@@ -503,16 +503,16 @@ export function DailyAnalysis() {
                   
                   {/* Summary Strip */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+                    <div className="p-4 rounded-lg border border-slate-200 space-y-1">
                       <span className="text-xs font-bold uppercase text-slate-500">Monthly Registration Total</span>
-                      <div className="text-xl font-extrabold text-blue-900">
+                      <div className="text-xl font-extrabold text-[#0F1729]">
                         {breakdownData.total_enrollment.toLocaleString()}
                       </div>
                     </div>
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+                    <div className="p-4 rounded-lg border border-slate-200 space-y-1">
                       <span className="text-xs font-bold uppercase text-slate-500">Total Monthly Amount</span>
-                      <div className="text-xl font-extrabold text-slate-900 font-mono">
+                      <div className="text-xl font-extrabold text-[#0F1729] font-mono">
                         ₹{Number(breakdownData.total_amount || 0).toLocaleString()}
                       </div>
                     </div>
@@ -520,17 +520,17 @@ export function DailyAnalysis() {
 
                   {/* Daily Log Rows */}
                   <div className="space-y-3">
-                    <h4 className="text-sm font-bold text-slate-900">Day-by-Day Activity Logs ({breakdownData.records.length} days)</h4>
-                    <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-96 overflow-y-auto">
+                    <h4 className="text-sm font-bold text-[#0F1729]">Day-by-Day Activity Logs ({breakdownData.records.length} days)</h4>
+                    <div className="border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-100 max-h-96 overflow-y-auto">
                       {breakdownData.records.map((r) => (
-                        <div key={r.record_id} className="p-3.5 bg-white hover:bg-slate-50 flex items-center justify-between text-xs">
+                        <div key={r.record_id} className="p-3.5 bg-white hover: flex items-center justify-between text-xs">
                           <div>
-                            <div className="font-bold text-slate-900">{r.enroll_date}</div>
+                            <div className="font-bold text-[#0F1729]">{r.enroll_date}</div>
                             <div className="text-slate-500">Station: {r.station_id}</div>
                           </div>
                           <div className="text-right">
-                            <span className="font-extrabold text-blue-900 text-sm">{r.total_enrollment} enrollments</span>
-                            <div className="font-mono font-semibold text-slate-700">₹{Number(r.total_amount || 0).toLocaleString()}</div>
+                            <span className="font-extrabold text-[#0F1729] text-sm">{r.total_enrollment} enrollments</span>
+                            <div className="font-mono font-semibold text-[#0F1729]">₹{Number(r.total_amount || 0).toLocaleString()}</div>
                           </div>
                         </div>
                       ))}
@@ -545,7 +545,7 @@ export function DailyAnalysis() {
               <button
                 type="button"
                 onClick={() => setIsDrawerOpen(false)}
-                className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-xl text-xs hover:bg-slate-800 transition cursor-pointer"
+                className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-lg text-xs hover:bg-slate-800 transition cursor-pointer"
               >
                 Close Breakdown
               </button>

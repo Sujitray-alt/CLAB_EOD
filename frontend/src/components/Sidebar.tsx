@@ -66,39 +66,25 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className={`${isOpen ? 'w-72' : 'w-20'} bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 min-h-screen border-r border-slate-800 transition-all duration-300 relative`}>
+    <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-[#0F1729] text-[#9CA3AF] flex flex-col flex-shrink-0 min-h-screen border-r border-[#1E2A45] transition-all duration-300 relative z-20`}>
       {isOpen ? (
         <>
           {/* App Branding */}
-          <div className="p-6 border-b border-slate-800 flex items-center justify-between overflow-hidden whitespace-nowrap">
-            <div className="flex items-center space-x-3.5">
-              <div className="p-3 rounded-xl bg-blue-700 text-white shadow-md">
-                <Shield className="w-7 h-7" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-white tracking-tight leading-tight">
-                  EOD Operations
-                </h2>
-                <span className="text-xs text-slate-400 font-medium">
-                  Supervision & Analytics
-                </span>
-              </div>
+          <div className="h-[72px] px-6 border-b border-[#1E2A45] flex items-center justify-between overflow-hidden whitespace-nowrap">
+            <div className="flex items-center bg-white px-2 py-1 rounded-md">
+              <img src="/logo.png" alt="Computer LAB Logo" className="h-8 object-contain" />
             </div>
             <button 
               onClick={() => setIsOpen(false)} 
-              className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800 flex-shrink-0 ml-1 transition"
+              className="text-[#9CA3AF] hover:text-white p-1 rounded flex-shrink-0 ml-1 transition"
               title="Close Sidebar"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* Navigation List */}
-          <nav className="flex-1 p-5 space-y-2 overflow-y-auto overflow-x-hidden">
-            <div className="px-3 pb-2 text-xs font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">
-              Navigation Menu
-            </div>
-
+          <nav className="flex-1 py-4 space-y-1 overflow-y-auto overflow-x-hidden">
             {navItems.map((item) => {
               if (item.adminOnly && user?.role !== 'admin') {
                 return null;
@@ -112,14 +98,14 @@ export function Sidebar() {
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `flex items-center space-x-3.5 px-4 py-3.5 rounded-xl text-sm font-semibold transition whitespace-nowrap overflow-hidden ${
+                    `flex items-center space-x-3.5 px-6 py-2.5 text-[13px] font-semibold transition whitespace-nowrap overflow-hidden border-l-[3px] ${
                       isActive
-                        ? 'bg-blue-800 text-white shadow-md font-bold'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        ? 'bg-[#1A3A8F] text-white border-[#1A3A8F]'
+                        : 'border-transparent text-[#9CA3AF] hover:bg-[#1E2A45] hover:text-white'
                     }`
                   }
                 >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
+                  <Icon className="w-4 h-4 flex-shrink-0" />
                   <span>{item.label}</span>
                 </NavLink>
               );
@@ -127,14 +113,14 @@ export function Sidebar() {
           </nav>
 
           {/* User Status Card at Sidebar Bottom */}
-          <div className="p-5 border-t border-slate-800 bg-slate-950/50 whitespace-nowrap overflow-hidden">
-            <div className="flex items-center space-x-3.5">
-              <div className="w-10 h-10 rounded-full bg-blue-900 text-white font-bold flex flex-shrink-0 items-center justify-center text-sm shadow">
+          <div className="px-6 py-4 border-t border-[#1E2A45] bg-[#0F1729] whitespace-nowrap overflow-hidden">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded bg-[#1A3A8F] text-white font-bold flex flex-shrink-0 items-center justify-center text-[13px]">
                 {user?.name?.charAt(0) || 'U'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white truncate">{user?.name}</p>
-                <p className="text-xs text-slate-400 truncate capitalize">{user?.role}</p>
+                <p className="text-[13px] font-bold text-white truncate">{user?.name}</p>
+                <p className="text-[11px] text-[#9CA3AF] truncate capitalize">{user?.role}</p>
               </div>
             </div>
           </div>
@@ -143,13 +129,13 @@ export function Sidebar() {
         <div className="flex flex-col items-center py-6 h-full">
           <button 
             onClick={() => setIsOpen(true)} 
-            className="p-3 rounded-xl bg-blue-700 text-white shadow-md mb-8 hover:bg-blue-600 transition"
+            className="p-2 rounded hover:bg-[#1E2A45] text-white transition mb-6"
             title="Open Sidebar"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5" />
           </button>
           
-          <nav className="flex-1 space-y-4 flex flex-col w-full px-3 overflow-y-auto overflow-x-hidden">
+          <nav className="flex-1 space-y-2 flex flex-col w-full overflow-y-auto overflow-x-hidden">
             {navItems.map((item) => {
               if (item.adminOnly && user?.role !== 'admin') return null;
               const Icon = item.icon;
@@ -160,14 +146,14 @@ export function Sidebar() {
                   end={item.end}
                   title={item.label}
                   className={({ isActive }) =>
-                    `flex justify-center p-3 rounded-xl transition ${
+                    `flex justify-center py-3 transition border-l-[3px] ${
                       isActive
-                        ? 'bg-blue-800 text-white shadow-md'
-                        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                        ? 'bg-[#1A3A8F] text-white border-[#1A3A8F]'
+                        : 'border-transparent text-[#9CA3AF] hover:bg-[#1E2A45] hover:text-white'
                     }`
                   }
                 >
-                  <Icon className="w-6 h-6 flex-shrink-0" />
+                  <Icon className="w-5 h-5 flex-shrink-0" />
                 </NavLink>
               );
             })}

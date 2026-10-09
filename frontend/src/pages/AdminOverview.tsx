@@ -95,13 +95,17 @@ export function AdminOverview() {
       if (districtId) params.district_id = districtId;
       if (dmId) params.dm_id = dmId;
 
-      const [summaryRes, anomalyRes] = await Promise.all([
-        api.get('/api/monthly/summary', { params }),
-        api.get('/api/anomalies/summary', { params }),
-      ]);
-
+      const summaryRes = await api.get('/api/monthly/summary', { params });
       setData(summaryRes.data);
-      setAnomalyCount(anomalyRes.data.total_anomalies || 0);
+      
+      try {
+        const anomalyRes = await api.get('/api/anomalies/summary', { params });
+        setAnomalyCount(anomalyRes.data.total_anomalies || 0);
+      } catch (anomalyErr) {
+        console.warn('Anomalies endpoint not available', anomalyErr);
+        setAnomalyCount(0);
+      }
+
     } catch (err: any) {
       const status = err.response?.status;
       const detail = err.response?.data?.detail;
@@ -123,20 +127,20 @@ export function AdminOverview() {
       
       {/* Loading Overlay Bar */}
       {loading && (
-        <div className="bg-blue-900 text-white px-5 py-2.5 rounded-xl shadow-md flex items-center space-x-3 text-xs font-semibold animate-pulse">
+        <div className="bg-[#1A3A8F] text-white px-5 py-2.5 rounded-lg flex items-center space-x-3 text-xs font-semibold animate-pulse">
           <Loader2 className="w-4 h-4 animate-spin text-white" />
           <span>Updating Dashboard Analytics for selected filter...</span>
         </div>
       )}
 
       {/* Non-Tech Help & Context Banner */}
-      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-start space-x-4">
-        <div className="p-2.5 rounded-xl bg-blue-900 text-white flex-shrink-0 mt-0.5">
+      <div className="border border-blue-200 rounded-lg p-5 flex items-start space-x-4">
+        <div className="p-2.5 rounded-lg bg-[#1A3A8F] text-white flex-shrink-0 mt-0.5">
           <Info className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h2 className="text-base font-bold text-blue-950">Executive Operations Overview</h2>
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <h2 className="text-base font-bold text-[#0F1729]">Executive Operations Overview</h2>
+          <p className="text-sm text-[#0F1729] leading-relaxed">
             This dashboard displays overall enrollment numbers, active reporting stations, and top performing district managers. 
             Use the <strong>Filter bar at the top of the screen</strong> to narrow results by month or specific district.
           </p>
@@ -145,18 +149,18 @@ export function AdminOverview() {
 
       {/* Error Callout if query fails */}
       {error && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-amber-900 space-y-3 shadow-sm">
+        <div className="border border-amber-200 rounded-lg p-6 text-[#0F1729] space-y-3">
           <div className="flex items-center space-x-2">
-            <AlertCircle className="w-6 h-6 text-amber-700" />
+            <AlertCircle className="w-6 h-6 text-[#0F1729]" />
             <h3 className="text-base font-bold">Unable to Display Analytics for Selected Filter</h3>
           </div>
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <p className="text-sm text-[#0F1729] leading-relaxed">
             {error}
           </p>
           <button
             type="button"
             onClick={resetFilters}
-            className="inline-flex items-center space-x-2 px-4 py-2.5 bg-blue-900 text-white rounded-xl text-xs font-semibold shadow-sm hover:bg-blue-950 transition"
+            className="inline-flex items-center space-x-2 px-4 py-2.5 bg-[#1A3A8F] text-white rounded-lg text-xs font-semibold hover:bg-[#2952C4] transition"
           >
             <RotateCcw className="w-4 h-4" />
             <span>Reset All Filters to Default</span>
@@ -168,27 +172,27 @@ export function AdminOverview() {
       <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 transition-opacity ${loading ? 'opacity-60' : 'opacity-100'}`}>
         
         {/* Card 1: Total Enrollments */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div className="bg-white p-6 rounded-lg border border-slate-200 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Total Enrollments
             </span>
-            <div className="p-2.5 rounded-xl bg-blue-50 text-blue-900">
+            <div className="p-2.5 rounded-lg text-[#9CA3AF]">
               <TrendingUp className="w-6 h-6" />
             </div>
           </div>
           <div>
-            <div className="text-3xl font-extrabold text-slate-900">
+            <div className="text-3xl font-extrabold text-[#0F1729]">
               {kpis?.total_enrollment ? kpis.total_enrollment.toLocaleString() : '0'}
             </div>
             <div className="flex items-center space-x-1.5 mt-2">
               {kpis && kpis.mom_growth_pct >= 0 ? (
-                <span className="inline-flex items-center text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+                <span className="inline-flex items-center text-xs font-bold text-[#0F1729] px-2 py-0.5 rounded-lg border border-emerald-200">
                   <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />
                   +{kpis.mom_growth_pct}% MoM
                 </span>
               ) : (
-                <span className="inline-flex items-center text-xs font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded-lg border border-red-200">
+                <span className="inline-flex items-center text-xs font-bold text-[#0F1729] px-2 py-0.5 rounded-lg border border-red-200">
                   <ArrowDownRight className="w-3.5 h-3.5 mr-0.5" />
                   {kpis?.mom_growth_pct}% MoM
                 </span>
@@ -202,17 +206,17 @@ export function AdminOverview() {
         </div>
 
         {/* Card 2: Active Stations */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div className="bg-white p-6 rounded-lg border border-slate-200 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Active Stations
             </span>
-            <div className="p-2.5 rounded-xl bg-slate-100 text-slate-800">
+            <div className="p-2.5 rounded-lg text-[#9CA3AF]">
               <Building2 className="w-6 h-6" />
             </div>
           </div>
           <div>
-            <div className="text-3xl font-extrabold text-slate-900">
+            <div className="text-3xl font-extrabold text-[#0F1729]">
               {kpis?.active_stations || 0} <span className="text-lg font-normal text-slate-500">/ {kpis?.total_stations || 0}</span>
             </div>
             <div className="text-xs font-semibold text-slate-600 mt-2">
@@ -225,17 +229,17 @@ export function AdminOverview() {
         </div>
 
         {/* Card 3: Active Operators */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div className="bg-white p-6 rounded-lg border border-slate-200 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Reporting Operators
             </span>
-            <div className="p-2.5 rounded-xl bg-slate-100 text-slate-800">
+            <div className="p-2.5 rounded-lg text-[#9CA3AF]">
               <Users className="w-6 h-6" />
             </div>
           </div>
           <div>
-            <div className="text-3xl font-extrabold text-slate-900">
+            <div className="text-3xl font-extrabold text-[#0F1729]">
               {kpis?.total_operators ? kpis.total_operators.toLocaleString() : '0'}
             </div>
             <div className="text-xs font-semibold text-slate-600 mt-2">
@@ -250,21 +254,21 @@ export function AdminOverview() {
         {/* Card 4: Operational Red Flags */}
         <div
           onClick={() => navigate('/dashboard/anomalies')}
-          className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3 cursor-pointer hover:border-amber-400 transition"
+          className="bg-white p-6 rounded-lg border border-slate-200 space-y-3 cursor-pointer hover:border-amber-400 transition"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Operational Red Flags
             </span>
-            <div className="p-2.5 rounded-xl bg-amber-50 text-amber-800">
+            <div className="p-2.5 rounded-lg text-[#9CA3AF]">
               <AlertTriangle className="w-6 h-6" />
             </div>
           </div>
           <div>
-            <div className="text-3xl font-extrabold text-amber-900">
+            <div className="text-3xl font-extrabold text-[#0F1729]">
               {anomalyCount}
             </div>
-            <div className="text-xs font-semibold text-amber-700 mt-2 flex items-center">
+            <div className="text-xs font-semibold text-[#0F1729] mt-2 flex items-center">
               <span>View Anomaly Warning Center</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </div>
@@ -280,13 +284,13 @@ export function AdminOverview() {
       <div className={`grid grid-cols-1 lg:grid-cols-3 gap-8 transition-opacity ${loading ? 'opacity-60' : 'opacity-100'}`}>
         
         {/* District Comparison Bar Chart */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="lg:col-span-2 bg-white p-6 rounded-lg border border-slate-200 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900">District Production Comparison</h3>
+              <h3 className="text-base font-bold text-[#0F1729]">District Production Comparison</h3>
               <p className="text-xs text-slate-500">Total enrollments registered per district</p>
             </div>
-            <div className="p-2 rounded-lg bg-slate-100 text-slate-600">
+            <div className="p-2 rounded-lg text-slate-600">
               <BarChart3 className="w-5 h-5" />
             </div>
           </div>
@@ -321,9 +325,9 @@ export function AdminOverview() {
         </div>
 
         {/* Fee Tier Category Distribution */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-lg border border-slate-200 space-y-4">
           <div className="border-b border-slate-100 pb-4">
-            <h3 className="text-base font-bold text-slate-900">Fee Tier Distribution</h3>
+            <h3 className="text-base font-bold text-[#0F1729]">Fee Tier Distribution</h3>
             <p className="text-xs text-slate-500">Breakdown across registration fee categories</p>
           </div>
 
@@ -373,9 +377,9 @@ export function AdminOverview() {
       </div>
 
       {/* Month-over-Month Growth Trend Line Chart */}
-      <div className={`bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 transition-opacity ${loading ? 'opacity-60' : 'opacity-100'}`}>
+      <div className={`bg-white p-6 rounded-lg border border-slate-200  space-y-4 transition-opacity ${loading ? 'opacity-60' : 'opacity-100'}`}>
         <div className="border-b border-slate-100 pb-4">
-          <h3 className="text-base font-bold text-slate-900">Monthly Enrollment Growth Trajectory</h3>
+          <h3 className="text-base font-bold text-[#0F1729]">Monthly Enrollment Growth Trajectory</h3>
           <p className="text-xs text-slate-500">Historical enrollment volume trajectory over time</p>
         </div>
 
@@ -399,11 +403,11 @@ export function AdminOverview() {
       </div>
 
       {/* District Manager Leaderboard Table */}
-      <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6 transition-opacity ${loading ? 'opacity-60' : 'opacity-100'}`}>
+      <div className={`bg-white rounded-lg border border-slate-200  overflow-hidden space-y-4 p-6 transition-opacity ${loading ? 'opacity-60' : 'opacity-100'}`}>
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2">
-              <Trophy className="w-5 h-5 text-blue-900" />
+            <h3 className="text-base font-bold text-[#0F1729] flex items-center space-x-2">
+              <Trophy className="w-5 h-5 text-[#0F1729]" />
               <span>District Manager Performance Leaderboard</span>
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -415,7 +419,7 @@ export function AdminOverview() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider">
+              <tr className="border-b border-slate-200 text-[#9CA3AF] text-xs font-bold uppercase tracking-wider">
                 <th className="py-3.5 px-4">Rank</th>
                 <th className="py-3.5 px-4">DM Name & ID</th>
                 <th className="py-3.5 px-4">District</th>
@@ -428,33 +432,33 @@ export function AdminOverview() {
             <tbody className="divide-y divide-slate-100 text-sm">
               {data?.dm_comparison && data.dm_comparison.length > 0 ? (
                 data.dm_comparison.map((dm, idx) => (
-                  <tr key={dm.dm_user_id || idx} className="hover:bg-slate-50 transition">
+                  <tr key={dm.dm_user_id || idx} className="hover: transition">
                     <td className="py-4 px-4 font-bold text-slate-600">
                       #{idx + 1}
                     </td>
                     <td className="py-4 px-4">
-                      <div className="font-bold text-slate-900">{dm.dm_name}</div>
+                      <div className="font-bold text-[#0F1729]">{dm.dm_name}</div>
                       <div className="text-xs text-slate-500 font-mono">{dm.dmid}</div>
                     </td>
-                    <td className="py-4 px-4 font-medium text-slate-700">
+                    <td className="py-4 px-4 font-medium text-[#0F1729]">
                       {dm.district_name || 'N/A'}
                     </td>
-                    <td className="py-4 px-4 text-center font-semibold text-slate-800">
+                    <td className="py-4 px-4 text-center font-semibold text-[#0F1729]">
                       {dm.station_count}
                     </td>
-                    <td className="py-4 px-4 text-right font-extrabold text-blue-900">
+                    <td className="py-4 px-4 text-right font-extrabold text-[#0F1729]">
                       {dm.total_enrollment ? dm.total_enrollment.toLocaleString() : '0'}
                     </td>
-                    <td className="py-4 px-4 text-right font-mono font-semibold text-slate-800">
+                    <td className="py-4 px-4 text-right font-mono font-semibold text-[#0F1729]">
                       ₹{dm.total_amount ? dm.total_amount.toLocaleString() : '0'}
                     </td>
                     <td className="py-4 px-4 text-center">
                       {idx < 3 ? (
-                        <span className="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <span className="inline-block px-2.5 py-1 rounded-md text-xs font-bold text-[#9CA3AF] border border-emerald-200">
                           Top Performer
                         </span>
                       ) : (
-                        <span className="inline-block px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                        <span className="inline-block px-2.5 py-1 rounded-md text-xs font-medium text-[#9CA3AF]">
                           Active
                         </span>
                       )}

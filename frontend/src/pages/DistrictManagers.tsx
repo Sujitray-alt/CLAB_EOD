@@ -61,6 +61,11 @@ interface DistrictOption {
   district_name: string;
 }
 
+interface StationOption {
+  station_id: string;
+  station_name: string;
+}
+
 interface ResetPasswordModalData {
   dmid: string;
   dmName: string;
@@ -80,6 +85,7 @@ export function DistrictManagers() {
   const [districtFilter, setDistrictFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [districtOptions, setDistrictOptions] = useState<DistrictOption[]>([]);
+  const [stationOptions, setStationOptions] = useState<StationOption[]>([]);
 
   // Modals & Drawer State
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
@@ -103,6 +109,7 @@ export function DistrictManagers() {
   const [formEmail, setFormEmail] = useState<string>('');
   const [formDmid, setFormDmid] = useState<string>('');
   const [formDistrictIds, setFormDistrictIds] = useState<number[]>([]);
+  const [formStationIds, setFormStationIds] = useState<string[]>([]);
   const [formStatus, setFormStatus] = useState<'active' | 'inactive'>('active');
   const [formSubmitting, setFormSubmitting] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -120,8 +127,9 @@ export function DistrictManagers() {
     try {
       const res = await api.get('/api/filters/options');
       setDistrictOptions(res.data.districts || []);
+      setStationOptions(res.data.stations || []);
     } catch (err) {
-      console.error('Failed to fetch district options', err);
+      console.error('Failed to fetch filter options', err);
     }
   };
 
@@ -141,7 +149,12 @@ export function DistrictManagers() {
       setDms(res.data.items || []);
       setTotal(res.data.total || 0);
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Unable to load District Managers directory.');
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        setError(detail.map((e: any) => e.msg).join(', '));
+      } else {
+        setError(detail || 'Unable to load District Managers directory.');
+      }
     } finally {
       setLoading(false);
     }
@@ -166,6 +179,7 @@ export function DistrictManagers() {
     setFormEmail('');
     setFormDmid('');
     setFormDistrictIds([]);
+    setFormStationIds([]);
     setFormError(null);
     setIsAddModalOpen(true);
   };
@@ -196,7 +210,12 @@ export function DistrictManagers() {
       fetchDmList();
       alert(`District Manager '${res.data.name}' created successfully! Assigned DMID: ${res.data.dmid}`);
     } catch (err: any) {
-      setFormError(err.response?.data?.detail || 'Failed to create District Manager.');
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        setFormError(detail.map((e: any) => e.msg).join(', '));
+      } else {
+        setFormError(detail || 'Failed to create District Manager.');
+      }
     } finally {
       setFormSubmitting(false);
     }
@@ -209,6 +228,7 @@ export function DistrictManagers() {
     setFormEmail(dm.email);
     setFormStatus(dm.status);
     setFormDistrictIds([]);
+    setFormStationIds([]);
     setFormError(null);
     setIsEditModalOpen(true);
   };
@@ -234,7 +254,12 @@ export function DistrictManagers() {
       setIsEditModalOpen(false);
       fetchDmList();
     } catch (err: any) {
-      setFormError(err.response?.data?.detail || 'Failed to update District Manager details.');
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        setFormError(detail.map((e: any) => e.msg).join(', '));
+      } else {
+        setFormError(detail || 'Failed to update District Manager details.');
+      }
     } finally {
       setFormSubmitting(false);
     }
@@ -281,7 +306,12 @@ export function DistrictManagers() {
         password: res.data.temporary_password || customResetPassword.trim()
       });
     } catch (err: any) {
-      setResetError(err.response?.data?.detail || 'Failed to update DM password. Please try again.');
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        setResetError(detail.map((e: any) => e.msg).join(', '));
+      } else {
+        setResetError(detail || 'Failed to update DM password. Please try again.');
+      }
     } finally {
       setResetSubmitting(false);
     }
@@ -297,7 +327,12 @@ export function DistrictManagers() {
       await api.post(`/api/district-managers/${dm.id}/deactivate`);
       fetchDmList();
     } catch (err: any) {
-      alert(err.response?.data?.detail || 'Failed to deactivate District Manager.');
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        alert(detail.map((e: any) => e.msg).join(', '));
+      } else {
+        alert(detail || 'Failed to deactivate District Manager.');
+      }
     }
   };
 
@@ -310,7 +345,12 @@ export function DistrictManagers() {
       const res = await api.get(`/api/district-managers/${dmId}`);
       setSelectedDmDetail(res.data);
     } catch (err: any) {
-      alert(err.response?.data?.detail || 'Failed to load DM details.');
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        alert(detail.map((e: any) => e.msg).join(', '));
+      } else {
+        alert(detail || 'Failed to load DM details.');
+      }
       setIsDrawerOpen(false);
     } finally {
       setDrawerLoading(false);
@@ -334,8 +374,8 @@ export function DistrictManagers() {
       {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center space-x-3">
-            <Users className="w-7 h-7 text-blue-900" />
+          <h1 className="text-2xl font-extrabold text-[#0F1729] flex items-center space-x-3">
+            <Users className="w-7 h-7 text-[#0F1729]" />
             <span>District Managers Directory</span>
           </h1>
           <p className="text-sm text-slate-600 mt-1">
@@ -346,7 +386,7 @@ export function DistrictManagers() {
         <button
           type="button"
           onClick={openAddModal}
-          className="flex items-center space-x-2 px-5 py-3 bg-blue-900 text-white font-bold rounded-xl text-sm shadow-md hover:bg-blue-950 transition cursor-pointer"
+          className="flex items-center space-x-2 px-5 py-3 bg-[#1A3A8F] text-white font-bold rounded-lg text-sm hover:bg-[#2952C4] transition cursor-pointer"
         >
           <Plus className="w-5 h-5" />
           <span>Add New District Manager</span>
@@ -354,7 +394,7 @@ export function DistrictManagers() {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <div className="bg-white p-5 rounded-lg border border-slate-200 space-y-4">
         <form onSubmit={handleSearchSubmit} className="flex flex-wrap items-center gap-4">
           
           {/* Text Search */}
@@ -367,7 +407,7 @@ export function DistrictManagers() {
               placeholder="Search DM by Name, Email, or DMID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm font-semibold text-[#0F1729] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-900"
             />
           </div>
 
@@ -382,7 +422,7 @@ export function DistrictManagers() {
                 setDistrictFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900 cursor-pointer"
+              className="w-full pl-10 pr-8 py-2.5 border border-slate-300 rounded-lg text-sm font-semibold text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900 cursor-pointer"
             >
               <option value="">All Districts</option>
               {districtOptions.map((d) => (
@@ -404,7 +444,7 @@ export function DistrictManagers() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-900 cursor-pointer"
+              className="w-full pl-10 pr-8 py-2.5 border border-slate-300 rounded-lg text-sm font-semibold text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900 cursor-pointer"
             >
               <option value="">All Statuses</option>
               <option value="active">Active Only</option>
@@ -415,7 +455,7 @@ export function DistrictManagers() {
           {/* Submit Search */}
           <button
             type="submit"
-            className="px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition cursor-pointer"
+            className="px-4 py-2.5 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition cursor-pointer"
           >
             Search
           </button>
@@ -425,7 +465,7 @@ export function DistrictManagers() {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="flex items-center space-x-1 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition border border-slate-200 cursor-pointer"
+              className="flex items-center space-x-1 px-3 py-2.5 hover:bg-slate-200 text-[#0F1729] rounded-lg text-sm font-semibold transition border border-slate-200 cursor-pointer"
             >
               <RefreshCw className="w-4 h-4" />
               <span>Reset</span>
@@ -437,18 +477,18 @@ export function DistrictManagers() {
 
       {/* Error Callout */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-5 text-red-900 flex items-center space-x-3">
+        <div className="border border-red-200 rounded-lg p-5 text-[#0F1729] flex items-center space-x-3">
           <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
           <div className="text-sm font-medium">{error}</div>
         </div>
       )}
 
       {/* DM Directory Data Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider">
+              <tr className="border-b border-slate-200 text-[#4B5563] text-xs font-bold uppercase tracking-wider">
                 <th className="py-3.5 px-4">DM Name & ID</th>
                 <th className="py-3.5 px-4">Email Address</th>
                 <th className="py-3.5 px-4">Assigned Districts</th>
@@ -462,7 +502,7 @@ export function DistrictManagers() {
                 <tr>
                   <td colSpan={6} className="text-center py-12 text-slate-500">
                     <div className="flex items-center justify-center space-x-2 text-sm font-semibold">
-                      <Loader2 className="w-5 h-5 animate-spin text-blue-900" />
+                      <Loader2 className="w-5 h-5 animate-spin text-[#0F1729]" />
                       <span>Loading District Managers...</span>
                     </div>
                   </td>
@@ -473,14 +513,14 @@ export function DistrictManagers() {
                     
                     {/* DM Name & ID */}
                     <td className="py-4 px-4">
-                      <div className="font-bold text-slate-900">{dm.name}</div>
-                      <div className="inline-block mt-0.5 px-2 py-0.5 rounded bg-blue-50 text-blue-900 text-xs font-mono font-bold border border-blue-200">
+                      <div className="font-bold text-[#0F1729]">{dm.name}</div>
+                      <div className="inline-block mt-0.5 px-2 py-0.5 rounded text-[#4B5563] text-xs font-mono font-bold border border-slate-200">
                         {dm.dmid}
                       </div>
                     </td>
 
                     {/* Email */}
-                    <td className="py-4 px-4 text-slate-700 font-medium">
+                    <td className="py-4 px-4 text-[#0F1729] font-medium">
                       <div className="flex items-center space-x-1.5">
                         <Mail className="w-4 h-4 text-slate-400" />
                         <span>{dm.email}</span>
@@ -494,7 +534,7 @@ export function DistrictManagers() {
                           {dm.assigned_districts.map((dist, i) => (
                             <span
                               key={i}
-                              className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200"
+                              className="px-2.5 py-0.5 rounded-md text-xs font-semibold text-[#4B5563] border border-slate-200"
                             >
                               {dist}
                             </span>
@@ -507,7 +547,7 @@ export function DistrictManagers() {
 
                     {/* Supervised Stations */}
                     <td className="py-4 px-4 text-center">
-                      <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-900 border border-blue-200">
+                      <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-md text-xs font-bold text-[#4B5563] border border-slate-200">
                         <Building2 className="w-3.5 h-3.5" />
                         <span>{dm.assigned_stations_count} Stations</span>
                       </span>
@@ -516,11 +556,11 @@ export function DistrictManagers() {
                     {/* Status */}
                     <td className="py-4 px-4 text-center">
                       {dm.status === 'active' ? (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                           Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 border border-slate-300">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-red-50 text-red-700 border border-red-200">
                           Inactive
                         </span>
                       )}
@@ -534,7 +574,7 @@ export function DistrictManagers() {
                         <button
                           type="button"
                           onClick={() => openDmDrawer(dm.id)}
-                          className="flex items-center space-x-1 px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-900 rounded-lg text-xs font-semibold border border-blue-200 transition cursor-pointer"
+                          className="flex items-center space-x-1 px-2.5 py-1.5 text-[#4B5563] hover:text-[#0F1729] rounded-lg text-xs font-semibold border border-slate-200 hover:border-slate-300 transition cursor-pointer"
                           title="View Station Assignments"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -545,7 +585,7 @@ export function DistrictManagers() {
                         <button
                           type="button"
                           onClick={() => openResetPasswordModal(dm)}
-                          className="flex items-center space-x-1 px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg text-xs font-semibold border border-amber-200 transition cursor-pointer"
+                          className="flex items-center space-x-1 px-2.5 py-1.5 text-[#4B5563] hover:text-[#0F1729] rounded-lg text-xs font-semibold border border-slate-200 hover:border-slate-300 transition cursor-pointer"
                           title="Set or generate password for DM account"
                         >
                           <Key className="w-3.5 h-3.5" />
@@ -556,7 +596,7 @@ export function DistrictManagers() {
                         <button
                           type="button"
                           onClick={() => openEditModal(dm)}
-                          className="flex items-center space-x-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold border border-slate-300 transition cursor-pointer"
+                          className="flex items-center space-x-1 px-2.5 py-1.5 text-[#4B5563] hover:bg-slate-200 hover:text-[#0F1729] rounded-lg text-xs font-semibold border border-slate-300 transition cursor-pointer"
                           title="Edit Name, Email, or Status"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -568,7 +608,7 @@ export function DistrictManagers() {
                           <button
                             type="button"
                             onClick={() => handleDeactivateDm(dm)}
-                            className="flex items-center space-x-1 px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-800 rounded-lg text-xs font-semibold border border-red-200 transition cursor-pointer"
+                            className="flex items-center space-x-1 px-2.5 py-1.5 text-red-600 hover:text-red-700 rounded-lg text-xs font-semibold border border-red-200 hover:border-red-300 transition cursor-pointer"
                             title="Deactivate District Manager Account"
                           >
                             <UserX className="w-3.5 h-3.5" />
@@ -593,7 +633,7 @@ export function DistrictManagers() {
         </div>
 
         {/* Pagination Bar */}
-        <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between text-xs text-slate-600 font-semibold">
+        <div className="border-t border-slate-200 px-6 py-4 flex items-center justify-between text-xs text-slate-600 font-semibold">
           <div>
             Showing {total > 0 ? (page - 1) * pageSize + 1 : 0} to {Math.min(page * pageSize, total)} of {total} DMs
           </div>
@@ -602,7 +642,7 @@ export function DistrictManagers() {
               type="button"
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="p-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+              className="p-2 bg-white border border-slate-300 rounded-lg hover: disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -611,7 +651,7 @@ export function DistrictManagers() {
               type="button"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="p-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+              className="p-2 bg-white border border-slate-300 rounded-lg hover: disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -623,9 +663,9 @@ export function DistrictManagers() {
       {/* Add DM Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden p-6 space-y-6">
+          <div className="bg-white rounded-lg border border-slate-200 max-w-lg w-full overflow-hidden p-6 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <h3 className="text-lg font-bold text-slate-900">Add New District Manager</h3>
+              <h3 className="text-lg font-bold text-[#0F1729]">Add New District Manager</h3>
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
@@ -636,14 +676,14 @@ export function DistrictManagers() {
             </div>
 
             {formError && (
-              <div className="bg-red-50 border border-red-200 text-red-800 text-xs p-3 rounded-xl">
+              <div className="border border-red-200 text-[#0F1729] text-xs p-3 rounded-lg">
                 {formError}
               </div>
             )}
 
             <form onSubmit={handleCreateDm} className="space-y-4 text-sm">
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -652,12 +692,12 @@ export function DistrictManagers() {
                   placeholder="e.g. Rahul Sharma"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -666,12 +706,12 @@ export function DistrictManagers() {
                   placeholder="e.g. rahul.sharma@eod.gov.in"
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
                   DMID (Optional)
                 </label>
                 <input
@@ -679,18 +719,18 @@ export function DistrictManagers() {
                   placeholder="e.g. ClabDM06 (Leave blank to auto-generate)"
                   value={formDmid}
                   onChange={(e) => setFormDmid(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900 font-mono"
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900 font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
                   Assign District
                 </label>
                 <select
                   value={formDistrictIds[0] || ''}
                   onChange={(e) => setFormDistrictIds(e.target.value ? [parseInt(e.target.value, 10)] : [])}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
                 >
                   <option value="">Select Primary District</option>
                   {districtOptions.map((d) => (
@@ -705,14 +745,14 @@ export function DistrictManagers() {
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs cursor-pointer"
+                  className="px-4 py-2 hover:bg-slate-200 text-[#0F1729] font-semibold rounded-lg text-xs cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={formSubmitting}
-                  className="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl text-xs shadow-md transition disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[#1A3A8F] hover:bg-[#2952C4] text-white font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
                 >
                   {formSubmitting ? 'Creating...' : 'Create Account'}
                 </button>
@@ -725,9 +765,9 @@ export function DistrictManagers() {
       {/* Edit DM Modal */}
       {isEditModalOpen && selectedDmForEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden p-6 space-y-6">
+          <div className="bg-white rounded-lg border border-slate-200 max-w-lg w-full overflow-hidden p-6 space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <h3 className="text-lg font-bold text-slate-900">Edit DM Details - {selectedDmForEdit.dmid}</h3>
+              <h3 className="text-lg font-bold text-[#0F1729]">Edit DM Details - {selectedDmForEdit.dmid}</h3>
               <button
                 type="button"
                 onClick={() => setIsEditModalOpen(false)}
@@ -738,14 +778,14 @@ export function DistrictManagers() {
             </div>
 
             {formError && (
-              <div className="bg-red-50 border border-red-200 text-red-800 text-xs p-3 rounded-xl">
+              <div className="border border-red-200 text-[#0F1729] text-xs p-3 rounded-lg">
                 {formError}
               </div>
             )}
 
             <form onSubmit={handleUpdateDm} className="space-y-4 text-sm">
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
                   Full Name
                 </label>
                 <input
@@ -753,12 +793,12 @@ export function DistrictManagers() {
                   required
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
                   Email Address
                 </label>
                 <input
@@ -766,36 +806,58 @@ export function DistrictManagers() {
                   required
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
                   Account Status
                 </label>
                 <select
                   value={formStatus}
                   onChange={(e) => setFormStatus(e.target.value as 'active' | 'inactive')}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
               </div>
 
+              <div>
+                <label className="block text-xs font-bold uppercase text-[#0F1729] mb-1">
+                  Assign Supervised Stations
+                </label>
+                <select
+                  multiple
+                  value={formStationIds}
+                  onChange={(e) => {
+                    const selected = Array.from(e.target.selectedOptions, option => option.value);
+                    setFormStationIds(selected);
+                  }}
+                  className="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-[#0F1729] focus:outline-none focus:ring-2 focus:ring-blue-900 h-24"
+                >
+                  {stationOptions.map((st) => (
+                    <option key={st.station_id} value={st.station_id}>
+                      {st.station_name || st.station_id}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[10px] text-slate-500 mt-1">Hold Ctrl (Windows) or Cmd (Mac) to select multiple. Note: Station assignments currently simulate changes locally.</p>
+              </div>
+
               <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs cursor-pointer"
+                  className="px-4 py-2 hover:bg-slate-200 text-[#0F1729] font-semibold rounded-lg text-xs cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={formSubmitting}
-                  className="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl text-xs shadow-md transition disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[#1A3A8F] hover:bg-[#2952C4] text-white font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
                 >
                   {formSubmitting ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -808,16 +870,16 @@ export function DistrictManagers() {
       {/* Reset & Set Custom Password Modal */}
       {selectedDmForReset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden p-6 space-y-5">
+          <div className="bg-white rounded-lg border border-slate-200 max-w-lg w-full overflow-hidden p-6 space-y-5">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center space-x-3">
-                <div className="p-2.5 bg-amber-100 text-amber-800 rounded-xl">
+                <div className="p-2.5 text-[#9CA3AF] rounded-lg">
                   <Key className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-extrabold text-slate-900">Set Account Password</h3>
+                  <h3 className="text-lg font-extrabold text-[#0F1729]">Set Account Password</h3>
                   <p className="text-xs text-slate-500">
                     Reset or assign custom password for <strong>{selectedDmForReset.name}</strong> ({selectedDmForReset.dmid})
                   </p>
@@ -836,22 +898,22 @@ export function DistrictManagers() {
             {/* If password has been saved successfully */}
             {resetSuccessData ? (
               <div className="space-y-4 text-center py-2">
-                <div className="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto">
-                  <Check className="w-6 h-6 text-emerald-700" />
+                <div className="w-12 h-12 text-[#9CA3AF] rounded-md flex items-center justify-center mx-auto">
+                  <Check className="w-6 h-6 text-[#0F1729]" />
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-slate-900">Password Saved Successfully!</h4>
+                  <h4 className="text-base font-bold text-[#0F1729]">Password Saved Successfully!</h4>
                   <p className="text-xs text-slate-600 mt-0.5">
                     The account password for <strong>{resetSuccessData.dmName}</strong> ({resetSuccessData.dmid}) has been updated.
                   </p>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-300 flex items-center justify-between font-mono text-sm font-bold text-slate-900">
+                <div className="p-4 rounded-lg border border-slate-300 flex items-center justify-between font-mono text-sm font-bold text-[#0F1729]">
                   <span className="select-all">{resetSuccessData.password}</span>
                   <button
                     type="button"
                     onClick={handleCopyPassword}
-                    className="flex items-center space-x-1.5 text-xs px-3 py-1.5 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition cursor-pointer"
+                    className="flex items-center space-x-1.5 text-xs px-3 py-1.5 bg-[#1A3A8F] text-white rounded-lg hover:bg-[#2952C4] transition cursor-pointer"
                   >
                     {copiedPassword ? (
                       <>
@@ -867,14 +929,14 @@ export function DistrictManagers() {
                   </button>
                 </div>
 
-                <p className="text-xs text-slate-600 bg-amber-50 p-3 rounded-xl border border-amber-200 text-left">
+                <p className="text-xs text-slate-600 p-3 rounded-lg border border-amber-200 text-left">
                   Share this password with the District Manager. They can log in immediately using their email address or DMID.
                 </p>
 
                 <button
                   type="button"
                   onClick={() => setSelectedDmForReset(null)}
-                  className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-xl text-xs hover:bg-slate-800 transition cursor-pointer"
+                  className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-lg text-xs hover:bg-slate-800 transition cursor-pointer"
                 >
                   Done & Close
                 </button>
@@ -884,7 +946,7 @@ export function DistrictManagers() {
               <form onSubmit={handleSaveCustomPassword} className="space-y-4">
                 
                 {resetError && (
-                  <div className="bg-red-50 border border-red-200 text-red-800 text-xs p-3 rounded-xl flex items-center space-x-2">
+                  <div className="border border-red-200 text-[#0F1729] text-xs p-3 rounded-lg flex items-center space-x-2">
                     <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
                     <span>{resetError}</span>
                   </div>
@@ -892,13 +954,13 @@ export function DistrictManagers() {
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#0F1729]">
                       New Password for DM
                     </label>
                     <button
                       type="button"
                       onClick={() => setCustomResetPassword(generateRandomTempPw())}
-                      className="text-xs font-semibold text-blue-900 hover:underline flex items-center space-x-1 cursor-pointer"
+                      className="text-xs font-semibold text-[#0F1729] hover:underline flex items-center space-x-1 cursor-pointer"
                     >
                       <RefreshCw className="w-3 h-3" />
                       <span>Generate Random</span>
@@ -912,7 +974,7 @@ export function DistrictManagers() {
                     value={customResetPassword}
                     onChange={(e) => setCustomResetPassword(e.target.value)}
                     placeholder="Enter custom password..."
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-mono text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-[#0F1729] font-mono text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-900"
                   />
                   <p className="text-[11px] text-slate-500">
                     You can type any custom password or click <strong>Generate Random</strong>.
@@ -923,7 +985,7 @@ export function DistrictManagers() {
                   <button
                     type="button"
                     onClick={() => setSelectedDmForReset(null)}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer"
+                    className="px-4 py-2.5 hover:bg-slate-200 text-[#0F1729] font-bold text-xs rounded-lg transition cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -931,7 +993,7 @@ export function DistrictManagers() {
                   <button
                     type="submit"
                     disabled={resetSubmitting}
-                    className="flex items-center space-x-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-xs transition disabled:opacity-50 cursor-pointer"
+                    className="flex items-center space-x-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-lg -xs transition disabled:opacity-50 cursor-pointer"
                   >
                     {resetSubmitting ? (
                       <>
@@ -957,17 +1019,17 @@ export function DistrictManagers() {
       {/* DM Detail Slide-Over Drawer */}
       {isDrawerOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs">
-          <div className="bg-white w-full max-w-xl h-full shadow-2xl overflow-y-auto p-6 space-y-6 flex flex-col justify-between">
+          <div className="bg-white w-full max-w-xl h-full overflow-y-auto p-6 space-y-6 flex flex-col justify-between">
             
             <div className="space-y-6">
               {/* Drawer Header */}
               <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2.5 bg-blue-50 text-blue-900 rounded-xl">
+                  <div className="p-2.5 text-[#9CA3AF] rounded-lg">
                     <Shield className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">
+                    <h3 className="text-lg font-bold text-[#0F1729]">
                       {drawerLoading ? 'Loading Profile...' : selectedDmDetail?.name}
                     </h3>
                     <p className="text-xs text-slate-500 font-mono font-semibold">
@@ -979,7 +1041,7 @@ export function DistrictManagers() {
                 <button
                   type="button"
                   onClick={() => setIsDrawerOpen(false)}
-                  className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer"
+                  className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover: cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -987,7 +1049,7 @@ export function DistrictManagers() {
 
               {drawerLoading ? (
                 <div className="flex items-center justify-center py-20 text-slate-500 text-sm font-semibold">
-                  <Loader2 className="w-6 h-6 animate-spin text-blue-900 mr-2" />
+                  <Loader2 className="w-6 h-6 animate-spin text-[#0F1729] mr-2" />
                   <span>Loading District Manager details...</span>
                 </div>
               ) : selectedDmDetail ? (
@@ -995,22 +1057,22 @@ export function DistrictManagers() {
                   
                   {/* Info Cards */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+                    <div className="p-4 rounded-lg border border-slate-200 space-y-1">
                       <span className="text-xs font-bold uppercase text-slate-500">Email Address</span>
-                      <div className="text-sm font-semibold text-slate-900 truncate">
+                      <div className="text-sm font-semibold text-[#0F1729] truncate">
                         {selectedDmDetail.email}
                       </div>
                     </div>
 
-                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+                    <div className="p-4 rounded-lg border border-slate-200 space-y-1">
                       <span className="text-xs font-bold uppercase text-slate-500">Status</span>
                       <div>
                         {selectedDmDetail.status === 'active' ? (
-                          <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                          <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold text-[#9CA3AF]">
                             Active
                           </span>
                         ) : (
-                          <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-200 text-slate-700">
+                          <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-slate-200 text-[#0F1729]">
                             Inactive
                           </span>
                         )}
@@ -1021,32 +1083,32 @@ export function DistrictManagers() {
                   {/* Supervised Stations List */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold text-slate-900 flex items-center space-x-2">
-                        <Building2 className="w-4 h-4 text-blue-900" />
+                      <h4 className="text-sm font-bold text-[#0F1729] flex items-center space-x-2">
+                        <Building2 className="w-4 h-4 text-[#0F1729]" />
                         <span>Supervised Operational Stations</span>
                       </h4>
-                      <span className="text-xs font-semibold px-2 py-0.5 bg-blue-50 text-blue-900 rounded-full border border-blue-200">
+                      <span className="text-xs font-semibold px-2 py-0.5 text-[#9CA3AF] rounded-md border border-blue-200">
                         {selectedDmDetail.assigned_stations.length} Total
                       </span>
                     </div>
 
                     {selectedDmDetail.assigned_stations.length > 0 ? (
-                      <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-80 overflow-y-auto">
+                      <div className="border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-100 max-h-80 overflow-y-auto">
                         {selectedDmDetail.assigned_stations.map((st, i) => (
-                          <div key={i} className="p-3 bg-white hover:bg-slate-50 flex items-center justify-between text-xs">
+                          <div key={i} className="p-3 bg-white hover: flex items-center justify-between text-xs">
                             <div>
-                              <div className="font-bold text-slate-900">{st.station_name || st.station_id}</div>
+                              <div className="font-bold text-[#0F1729]">{st.station_name || st.station_id}</div>
                               <div className="text-slate-500 font-mono">{st.station_id}</div>
                             </div>
                             <div className="text-right">
-                              <span className="font-semibold text-slate-700">{st.district_name || 'N/A'}</span>
+                              <span className="font-semibold text-[#0F1729]">{st.district_name || 'N/A'}</span>
                               <div className="text-slate-400 text-[10px]">Effective: {st.effective_month}</div>
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-center text-xs text-slate-400">
+                      <div className="p-6 border border-slate-200 rounded-lg text-center text-xs text-slate-400">
                         No individual station assignments recorded.
                       </div>
                     )}
@@ -1060,7 +1122,7 @@ export function DistrictManagers() {
               <button
                 type="button"
                 onClick={() => setIsDrawerOpen(false)}
-                className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-xl text-xs hover:bg-slate-800 transition cursor-pointer"
+                className="w-full py-2.5 bg-slate-900 text-white font-bold rounded-lg text-xs hover:bg-slate-800 transition cursor-pointer"
               >
                 Close Drawer
               </button>

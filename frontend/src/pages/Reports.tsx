@@ -68,8 +68,8 @@ export function Reports() {
       
       {/* Page Header */}
       <div className="border-b border-slate-200 pb-5">
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center space-x-3">
-          <FileSpreadsheet className="w-7 h-7 text-emerald-700" />
+        <h1 className="text-2xl font-extrabold text-[#0F1729] flex items-center space-x-3">
+          <FileSpreadsheet className="w-7 h-7 text-[#0F1729]" />
           <span>Reports & Data Export Center</span>
         </h1>
         <p className="text-sm text-slate-600 mt-1">
@@ -78,13 +78,13 @@ export function Reports() {
       </div>
 
       {/* Active Filter Scope Info Banner */}
-      <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 flex items-start space-x-4">
-        <div className="p-2.5 rounded-xl bg-emerald-700 text-white flex-shrink-0 mt-0.5">
+      <div className="border border-emerald-200 rounded-lg p-5 flex items-start space-x-4">
+        <div className="p-2.5 rounded-lg bg-emerald-700 text-white flex-shrink-0 mt-0.5">
           <Info className="w-6 h-6" />
         </div>
         <div className="space-y-1">
           <h2 className="text-base font-bold text-emerald-950">Active Export Filter Scope</h2>
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <p className="text-sm text-[#0F1729] leading-relaxed">
             All reports downloaded from this page will automatically apply your active filter selections: 
             <strong className="text-emerald-950"> Month: {formatMonthLabel(globalFilters.month)}</strong> | 
             <strong className="text-emerald-950"> District ID: {globalFilters.districtId || 'All Districts'}</strong> | 
@@ -97,12 +97,12 @@ export function Reports() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         
         {/* Card 1: Monthly Summary Report */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5 flex flex-col justify-between">
+        <div className="bg-white rounded-lg border border-slate-200 p-6 space-y-5 flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="p-3 bg-blue-50 text-blue-900 w-fit rounded-xl">
+            <div className="p-3 text-[#9CA3AF] w-fit rounded-lg">
               <Calendar className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">Monthly Production Summary</h3>
+            <h3 className="text-lg font-bold text-[#0F1729]">Monthly Production Summary</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
               Consolidated monthly station summaries featuring total enrollment volume, operator codes, district assignments, fee tier breakdowns, and total amounts (`₹`).
             </p>
@@ -113,7 +113,7 @@ export function Reports() {
               type="button"
               onClick={() => handleDownload('monthly', 'xlsx')}
               disabled={!!downloading}
-              className="w-full flex items-center justify-center space-x-2 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow-sm transition disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
             >
               {downloading === 'monthly-xlsx' ? (
                 <>
@@ -132,7 +132,7 @@ export function Reports() {
               type="button"
               onClick={() => handleDownload('monthly', 'csv')}
               disabled={!!downloading}
-              className="w-full flex items-center justify-center space-x-2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs transition disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 py-2.5 hover:bg-slate-200 text-[#0F1729] font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
             >
               {downloading === 'monthly-csv' ? (
                 <>
@@ -150,12 +150,12 @@ export function Reports() {
         </div>
 
         {/* Card 2: Daily Operational Logs Report */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5 flex flex-col justify-between">
+        <div className="bg-white rounded-lg border border-slate-200 p-6 space-y-5 flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="p-3 bg-slate-100 text-slate-800 w-fit rounded-xl">
+            <div className="p-3 text-[#9CA3AF] w-fit rounded-lg">
               <Clock className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">Daily Operational Activity Logs</h3>
+            <h3 className="text-lg font-bold text-[#0F1729]">Daily Operational Activity Logs</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
               Granular day-by-day operational logs for station operators, showing daily enrollment counts, fee categories, and revenue logs.
             </p>
@@ -166,7 +166,7 @@ export function Reports() {
               type="button"
               onClick={() => handleDownload('daily', 'xlsx')}
               disabled={!!downloading}
-              className="w-full flex items-center justify-center space-x-2 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow-sm transition disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
             >
               {downloading === 'daily-xlsx' ? (
                 <>
@@ -185,7 +185,7 @@ export function Reports() {
               type="button"
               onClick={() => handleDownload('daily', 'csv')}
               disabled={!!downloading}
-              className="w-full flex items-center justify-center space-x-2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs transition disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 py-2.5 hover:bg-slate-200 text-[#0F1729] font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
             >
               {downloading === 'daily-csv' ? (
                 <>
@@ -203,12 +203,12 @@ export function Reports() {
         </div>
 
         {/* Card 3: Anomaly & Red Flags Report */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5 flex flex-col justify-between">
+        <div className="bg-white rounded-lg border border-slate-200 p-6 space-y-5 flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="p-3 bg-amber-50 text-amber-800 w-fit rounded-xl">
+            <div className="p-3 text-[#9CA3AF] w-fit rounded-lg">
               <ShieldAlert className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">Anomaly & Red Flags Report</h3>
+            <h3 className="text-lg font-bold text-[#0F1729]">Anomaly & Red Flags Report</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
               Early warning operational audit report capturing flagged silent stations (&ge;7 days), DM performance declines (&ge;20%), and zero-activity operational units.
             </p>
@@ -219,7 +219,7 @@ export function Reports() {
               type="button"
               onClick={() => handleDownload('anomalies', 'xlsx')}
               disabled={!!downloading}
-              className="w-full flex items-center justify-center space-x-2 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs shadow-sm transition disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
             >
               {downloading === 'anomalies-xlsx' ? (
                 <>
@@ -238,7 +238,7 @@ export function Reports() {
               type="button"
               onClick={() => handleDownload('anomalies', 'csv')}
               disabled={!!downloading}
-              className="w-full flex items-center justify-center space-x-2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs transition disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 py-2.5 hover:bg-slate-200 text-[#0F1729] font-bold rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
             >
               {downloading === 'anomalies-csv' ? (
                 <>
