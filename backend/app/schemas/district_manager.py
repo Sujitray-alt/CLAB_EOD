@@ -51,6 +51,8 @@ class UpdateDMRequest(BaseModel):
     email: Optional[EmailStr] = None
     status: Optional[UserStatus] = None
     district_ids: Optional[List[int]] = None
+    station_ids: Optional[List[str]] = None
+    
 
 class ResetPasswordRequest(BaseModel):
     new_password: Optional[str] = Field(None, min_length=6, description="Custom password to set for the DM (auto-generated if omitted)")

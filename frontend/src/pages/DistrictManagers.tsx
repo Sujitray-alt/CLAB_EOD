@@ -249,6 +249,9 @@ export function DistrictManagers() {
       if (formDistrictIds.length > 0) {
         payload.district_ids = formDistrictIds;
       }
+      if (formStationIds.length > 0) {
+        payload.station_ids = formStationIds;
+      }
 
       await api.put(`/api/district-managers/${selectedDmForEdit.id}`, payload);
       setIsEditModalOpen(false);
@@ -843,7 +846,7 @@ export function DistrictManagers() {
                     </option>
                   ))}
                 </select>
-                <p className="text-[10px] text-slate-500 mt-1">Hold Ctrl (Windows) or Cmd (Mac) to select multiple. Note: Station assignments currently simulate changes locally.</p>
+                <p className="text-[10px] text-slate-500 mt-1">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
               </div>
 
               <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">

@@ -129,7 +129,11 @@ class DMService:
 
         assignments = []
         districts_set = set()
+        seen_stations = set()
         for r in asgn_rows:
+            if r[0] in seen_stations:
+                continue
+            seen_stations.add(r[0])
             dist_name = r[3] or "Unknown"
             districts_set.add(dist_name)
             assignments.append(
@@ -280,11 +284,21 @@ class DMService:
 
         if payload.district_ids is not None:
             diffs["district_ids"] = payload.district_ids
-            await db.execute(
-                update(StationAssignment)
-                .where(StationAssignment.district_id.in_(payload.district_ids))
-                .values(dm_user_id=dm.id)
-            )
+            if payload.district_ids:
+                await db.execute(
+                    update(StationAssignment)
+                    .where(StationAssignment.district_id.in_(payload.district_ids))
+                    .values(dm_user_id=dm.id)
+                )
+
+        if payload.station_ids is not None:
+            diffs["station_ids"] = payload.station_ids
+            if payload.station_ids:
+                await db.execute(
+                    update(StationAssignment)
+                    .where(StationAssignment.station_id.in_(payload.station_ids))
+                    .values(dm_user_id=dm.id)
+                )
 
         if diffs:
             log = AuditLog(
