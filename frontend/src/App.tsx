@@ -67,6 +67,9 @@ export function App() {
         >
           <Route index element={<AdminOverview />} />
           <Route path="dms" element={<DistrictManagers />} />
+          <Route path="monthly" element={<MonthlyAnalysis />} />
+          <Route path="daily" element={<DailyAnalysis />} />
+          <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
         </Route>
 

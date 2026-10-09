@@ -393,10 +393,10 @@ export function DailyAnalysis() {
                       <button
                         type="button"
                         onClick={() => openBreakdownDrawer(r)}
-                        className="inline-flex items-center space-x-1 px-2.5 py-1.5 hover:text-[#9CA3AF] rounded-lg text-xs font-semibold border border-blue-200 transition cursor-pointer"
+                        className="inline-flex items-center space-x-1 px-2.5 py-1.5 text-[#0F1729] bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold border border-slate-300 transition cursor-pointer"
                         title="View day-by-day logs for this operator"
                       >
-                        <Eye className="w-3.5 h-3.5" />
+                        <Eye className="w-3.5 h-3.5 text-[#0F1729]" />
                         <span>View Breakdown</span>
                       </button>
                     </td>

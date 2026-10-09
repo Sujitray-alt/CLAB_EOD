@@ -265,28 +265,28 @@ export function MonthlyAnalysis() {
 
                     {/* Fee Category Breakdowns */}
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.bmu_100 > 0 ? <span className="text-[#0F1729] font-medium">{r.bmu_100} <span className="text-[#9CA3AF]">(₹{(r.bmu_100 * 100).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.bmu_100 > 0 ? <span className="text-[#0F1729] font-medium">{r.bmu_100} <span className="text-[#4B5563]">(₹{(r.bmu_100 * 100).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.bmu_125 > 0 ? <span className="text-[#0F1729] font-medium">{r.bmu_125} <span className="text-[#9CA3AF]">(₹{(r.bmu_125 * 125).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.bmu_125 > 0 ? <span className="text-[#0F1729] font-medium">{r.bmu_125} <span className="text-[#4B5563]">(₹{(r.bmu_125 * 125).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.dmu_50 > 0 ? <span className="text-[#0F1729] font-medium">{r.dmu_50} <span className="text-[#9CA3AF]">(₹{(r.dmu_50 * 50).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.dmu_50 > 0 ? <span className="text-[#0F1729] font-medium">{r.dmu_50} <span className="text-[#4B5563]">(₹{(r.dmu_50 * 50).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.dmu_75 > 0 ? <span className="text-[#0F1729] font-medium">{r.dmu_75} <span className="text-[#9CA3AF]">(₹{(r.dmu_75 * 75).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.dmu_75 > 0 ? <span className="text-[#0F1729] font-medium">{r.dmu_75} <span className="text-[#4B5563]">(₹{(r.dmu_75 * 75).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.mbu_0 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_0} <span className="text-[#9CA3AF]">(₹0)</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.mbu_0 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_0} <span className="text-[#4B5563]">(₹0)</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.mbu_100 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_100} <span className="text-[#9CA3AF]">(₹{(r.mbu_100 * 100).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.mbu_100 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_100} <span className="text-[#4B5563]">(₹{(r.mbu_100 * 100).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.mbu_125 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_125} <span className="text-[#9CA3AF]">(₹{(r.mbu_125 * 125).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.mbu_125 > 0 ? <span className="text-[#0F1729] font-medium">{r.mbu_125} <span className="text-[#4B5563]">(₹{(r.mbu_125 * 125).toLocaleString()})</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
                     <td className="py-2 px-2 text-center font-mono text-[11px] whitespace-nowrap">
-                      {r.new_0 > 0 ? <span className="text-[#0F1729] font-medium">{r.new_0} <span className="text-[#9CA3AF]">(₹0)</span></span> : <span className="text-[#D1D5DB]">0</span>}
+                      {r.new_0 > 0 ? <span className="text-[#0F1729] font-medium">{r.new_0} <span className="text-[#4B5563]">(₹0)</span></span> : <span className="text-[#D1D5DB]">0</span>}
                     </td>
 
                     {/* Total Enrollments */}
